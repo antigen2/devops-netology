@@ -10,3 +10,4 @@
 3. Все файлы с расширением `*.tfvars` и `tfvars.json`
 
 # Task 2.2
+`commit one`
