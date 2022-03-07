@@ -22,6 +22,7 @@ index 86d70e3e0..588d807b1 100644
  * command/0.13upgrade: Do not add source for builtin provider ([#25215](https://github.com/hashicorp/terraform/issues/25215))
  * command/apply: Fix bug which caused Terraform to silently exit on Windows when using absolute plan path ([#25233](https://github.com/hashicorp/terraform/issues/25233))
 ```
+
 2. Какому тегу соответствует коммит `85024d3`
 ```bash
 $ git log -n 1 "85024d3"
@@ -32,6 +33,7 @@ Date:   Thu Mar 5 20:56:10 2020 +0000
     v0.12.23
 ```
 tag: v0.12.23
+
 3. Хеши родителей у коммита b8d720.
 ```bash
 $ git log -1 "b8d720"
@@ -50,6 +52,7 @@ $ git log -1 --oneline --no-abbrev-commit "9ea88f22f"
 ```
 Коммит создан в результате мержа 2-ух коммитов:
 `56cd7859e05c36c06b56d013b55a252d0bb7e158` и `9ea88f22fc6269854151c571162c5bcf958bee2b`
+
 4. Перечислить хеши и комментарии всех коммитов которые были сделаны между тегами v0.12.23 и v0.12.24.
 ```bash
 $ git log --pretty=oneline v0.12.23...v0.12.24
@@ -64,6 +67,7 @@ d5f9411f5108260320064349b757f55c09bc4b80 command: Fix bug when using terraform l
 dd01a35078f040ca984cdd349f18d0b67e486c35 Update CHANGELOG.md
 225466bc3e5f35baa5d07197bbc079345b77525e Cleanup after v0.12.23 release
 ```
+
 5. Найти коммит в котором была создана функция func providerSource
 ```bash
 $ git log -S "func providerSource" --oneline --no-abbrev-commit 
@@ -71,6 +75,7 @@ $ git log -S "func providerSource" --oneline --no-abbrev-commit
 8c928e83589d90a031f811fae52a81be7153e82f main: Consult local directories as potential mirrors of providers
 ```
 Функция создана в коммите `8c928e83589d90a031f811fae52a81be7153e82f`
+
 6. Найти все коммиты в которых была изменена функция `globalPluginDirs`.
 ```bash
 $ git log -S "func globalPluginDirs"
@@ -100,6 +105,7 @@ Date:   Thu Apr 13 18:05:58 2017 -0700
 ```
 Функция `globalPluginDirs` была создана в коммите `8364383c359a6b738a436d1b7745ccdce178df47`
 Далее изменений ее не было.
+
 7. Кто автор функции synchronizedWriters
 ```bash
 $ git log -S "func synchronizedWriters" --pretty=format:"%an %ad"
