@@ -58,7 +58,8 @@ bash    126048 antigen    5u   CHR  136,5      0t0       8 /dev/pts/5
 bash    126048 antigen  255u   CHR  136,5      0t0       8 /dev/pts/5
 ```
 <code>echo netology > /proc/$$/fd/5</code> - отобразит <code>netology</code> в консоли, т.к. ранее осуществили перенаправление потока в <code>stdout</code>
-8. 
+
+8.
 ```bash
 $ ls /tmp/123 /123/234 /345/123 ~ 2>&1 1>&5 | grep -E "234|tmp"
 /home/antigen:
@@ -140,6 +141,7 @@ _=/usr/bin/env
 10. 
 <code>/proc/<PID>/cmdline</code> - содержит аргументы командной строки.
 <code>/proc/<PID>/exe</code> - содержит символическую ссылку к исполняемой команде.
+
 11. 
 ```bash
 $ grep sse /proc/cpuinfo 
@@ -149,6 +151,7 @@ flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov 
 flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb invpcid_single pti ssbd ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm arat pln pts hwp hwp_notify hwp_act_window hwp_epp md_clear flush_l1d
 ```
 <code>sse4_2</code>
+
 12. По умолчанию для выполнения команд по <code>ssh</code> псевдо-терминал не выделяется. Необходимо его задавать принудительно ключем <code>-t</code>
 ```bash
 $ ssh localhost -t 'tty'
@@ -204,5 +207,6 @@ MiB Swap:  17200,0 total,  17200,0 free,      0,0 used.   3808,4 avail Mem
      14 root      rt   0       0      0      0 S   0,0   0,0   0:00.01 migration/0
 ```
 Не удалось перенести <code>ping ya.ru</code>
+
 14. <code>tee</code> читает <code>stdin</code> и записывает в <code>stdout</code> и в файл(ы).
 Получив поток данных <code>sudo tee</code> запишет его в файл от имени суперпользователя в отличии от <code>sudo echo ></code>, который выполнит <code>echo</code>от суперпользователя, но вывод <code>></code> передаст от самого пользователя.
