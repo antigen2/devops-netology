@@ -1,9 +1,17 @@
 # 3.3. Операционные системы, лекция 1 #
 1. 
 ```bash
-$ strace /bin/bash -c 'cd /tmp' 2>&1 | grep cd
-execve("/bin/bash", ["/bin/bash", "-c", "cd /tmp"], 0x7ffd92082180 /* 34 vars */) = 0
+$ strace /bin/bash -c 'cd /tmp' 2>&1 | tail -7
+rt_sigprocmask(SIG_BLOCK, NULL, [], 8)  = 0
+stat("/tmp", {st_mode=S_IFDIR|S_ISVTX|0777, st_size=4096, ...}) = 0
+chdir("/tmp")                           = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+exit_group(0)                           = ?
++++ exited with 0 +++
 ```
+<code>chdir("/tmp")                           = 0</code> - искомая строка
+
 2. 
 ```bash
 $ strace file /bin/bash 2>&1 | grep openat
@@ -23,7 +31,18 @@ openat(AT_FDCWD, "/bin/bash", O_RDONLY|O_NONBLOCK) = 3
 ```
 Скорее всего бд находится в <code>/etc/magic</code>, <code>/usr/share/misc/magic.mgc</code>
 
-3. Поможет только остановка/перезапуск процесса держащего файл.
+3. 
+```bash
+antigen@antigen-PC:~/tmp/1$ ping ya.ru > ping.log &
+[1] 19752
+antigen@antigen-PC:~/tmp/1$ rm ping.log      
+antigen@antigen-PC:~/tmp/1$ ls
+antigen@antigen-PC:~/tmp/1$ sudo lsof -p 19752 | grep ping.log                               
+ping    19752 antigen    1w   REG    8,3     3307 6160494 /home/antigen/tmp/1/ping.log (deleted)
+antigen@antigen-PC:~/tmp/1$ sudo cat /proc/19752/fd/1 > /home/antigen/tmp/1/ping.log   
+antigen@antigen-PC:~/tmp/1$ ls
+ping.log
+```
 
 4. Зомби процесс - это процесс, который завершил свою работу, 
 но по каким-то причинам родительский процесс не принял его код завершения.
@@ -31,17 +50,16 @@ openat(AT_FDCWD, "/bin/bash", O_RDONLY|O_NONBLOCK) = 3
 
 5. 
 ```bash
-$ strace opensnoop-bpfcc 2>&1 | grep openat | head
-openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libpthread.so.0", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libdl.so.2", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libutil.so.1", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libm.so.6", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libexpat.so.1", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libz.so.1", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache", O_RDONLY) = 3
+23178  loginctl           -1   2 PID    COMM               FD ERR PATH
+/opt/assistant/lib/tls/haswell/x86_64/libc.so.6
+23178  loginctl           -1   2 /opt/assistant/lib/tls/haswell/libc.so.6
+23178  loginctl           -1   2 /opt/assistant/lib/tls/x86_64/libc.so.6
+23178  loginctl           -1   2 /opt/assistant/lib/tls/libc.so.6
+23178  loginctl           -1   2 /opt/assistant/lib/haswell/x86_64/libc.so.6
+23178  loginctl           -1   2 /opt/assistant/lib/haswell/libc.so.6
+23178  loginctl           -1   2 /opt/assistant/lib/x86_64/libc.so.6
+23178  loginctl           -1   2 /opt/assistant/lib/libc.so.6
+23178  loginctl           -1   2 /lib/systemd/tls/haswell/x86_64/libc.so.6
 ```
 6. 
 ```bash
