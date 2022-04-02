@@ -43,21 +43,21 @@ Apr 01 14:21:07 kenny node_exporter[82397]: ts=2022-04-01T14:21:07.667Z caller=n
 Apr 01 14:21:07 kenny node_exporter[82397]: ts=2022-04-01T14:21:07.668Z caller=tls_config.go:195 level=info msg="TLS is disabled." http2=false
 ```
 2.
-CPU: 
-<code>process_cpu_seconds_total</code> - Total user and system CPU time spent in seconds.
-RAM:
-<code>node_memory_MemTotal_bytes</code> - Memory information field MemTotal_bytes.
-<code>node_memory_MemAvailable_bytes</code> - Memory information field MemAvailable_bytes.
-<code>node_memory_MemFree_bytes</code> - Memory information field MemFree_bytes.
-HDD:
-<code>node_memory_SwapTotal_bytes</code> - Memory information field SwapTotal_bytes.
-<code>node_memory_SwapFree_bytes</code> - Memory information field SwapFree_bytes.
-<code>node_disk_io_time_seconds_total</code> - Total seconds spent doing I/Os.
-NETWORK:
-<code>node_network_info</code> - Non-numeric data from /sys/class/net/<iface>, value is always 1
-<code>node_network_up</code> - Value is 1 if operstate is 'up', 0 otherwise.
-<code>node_network_receive_bytes_total</code> - Network device statistic receive_bytes.
-<code>node_network_transmit_bytes_total</code> - Network device statistic transmit_bytes.
+CPU: \
+<code>process_cpu_seconds_total</code> - Total user and system CPU time spent in seconds. \
+RAM: \
+<code>node_memory_MemTotal_bytes</code> - Memory information field MemTotal_bytes. \
+<code>node_memory_MemAvailable_bytes</code> - Memory information field MemAvailable_bytes. \
+<code>node_memory_MemFree_bytes</code> - Memory information field MemFree_bytes. \
+HDD: \
+<code>node_memory_SwapTotal_bytes</code> - Memory information field SwapTotal_bytes. \
+<code>node_memory_SwapFree_bytes</code> - Memory information field SwapFree_bytes. \
+<code>node_disk_io_time_seconds_total</code> - Total seconds spent doing I/Os. \
+NETWORK: \
+<code>node_network_info</code> - Non-numeric data from /sys/class/net/<iface>, value is always 1 \
+<code>node_network_up</code> - Value is 1 if operstate is 'up', 0 otherwise. \
+<code>node_network_receive_bytes_total</code> - Network device statistic receive_bytes. \
+<code>node_network_transmit_bytes_total</code> - Network device statistic transmit_bytes. \
 
 3.
 OK
