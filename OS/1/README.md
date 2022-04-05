@@ -39,7 +39,7 @@ antigen@antigen-PC:~/tmp/1$ rm ping.log
 antigen@antigen-PC:~/tmp/1$ ls
 antigen@antigen-PC:~/tmp/1$ sudo lsof -p 19752 | grep ping.log                               
 ping    19752 antigen    1w   REG    8,3     3307 6160494 /home/antigen/tmp/1/ping.log (deleted)
-antigen@antigen-PC:~/tmp/1$ sudo cat /proc/19752/fd/1 > /home/antigen/tmp/1/ping.log   
+antigen@antigen-PC:~/tmp/1$ sudo cat /proc/19752/fd/1 > /home/antigen/tmp/1/ping.logsudo cat /proc/19752/fd/1 > /home/antigen/tmp/1/ping.log   
 antigen@antigen-PC:~/tmp/1$ ls
 ping.log
 ```
