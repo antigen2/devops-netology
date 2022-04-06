@@ -31,17 +31,23 @@ openat(AT_FDCWD, "/bin/bash", O_RDONLY|O_NONBLOCK) = 3
 ```
 Скорее всего бд находится в <code>/etc/magic</code>, <code>/usr/share/misc/magic.mgc</code>
 
-3. 
+3. Как в итоге понял, очистка файла зависит от того, как на запись открывается файл. 
+При дозаписи он очищается если в него направить <code>null</code>.
+Если же открывается просто на запись, маркер не перемещается в начало файла и обнуляемый файл становится 
+разряженным продолжая занимать место.
 ```bash
-antigen@antigen-PC:~/tmp/1$ ping ya.ru > ping.log &
-[1] 19752
-antigen@antigen-PC:~/tmp/1$ rm ping.log      
-antigen@antigen-PC:~/tmp/1$ ls
-antigen@antigen-PC:~/tmp/1$ sudo lsof -p 19752 | grep ping.log                               
-ping    19752 antigen    1w   REG    8,3     3307 6160494 /home/antigen/tmp/1/ping.log (deleted)
-antigen@antigen-PC:~/tmp/1$ sudo cat /proc/19752/fd/1 > /home/antigen/tmp/1/ping.logsudo cat /proc/19752/fd/1 > /home/antigen/tmp/1/ping.log   
-antigen@antigen-PC:~/tmp/1$ ls
-ping.log
+antigen@antigen-PC:~/tmp/1$ ls -lh ping.log
+-rw-rw-r-- 1 antigen antigen 110K апр  6 20:09 ping.log
+antigen@antigen-PC:~/tmp/1$ rm ping.log && ls
+antigen@antigen-PC:~/tmp/1$ sudo lsof -p 252509 | grep ping.log
+[sudo] password for antigen: 
+lsof: WARNING: can't stat() fuse file system /run/user/1000/doc
+      Output information may be incomplete.
+ping    252509 antigen    1w   REG    8,3   113753 6160603 /home/antigen/tmp/1/ping.log (deleted)
+antigen@antigen-PC:~/tmp/1$ cat /dev/null | sudo tee /proc/252509/fd/1
+antigen@antigen-PC:~/tmp/1$ sudo cat /proc/252509/fd/1 > /home/antigen/tmp/1/ping.log
+antigen@antigen-PC:~/tmp/1$ ls -lh ping.log
+-rw-rw-r-- 1 antigen antigen 432 апр  6 20:09 ping.log
 ```
 
 4. Зомби процесс - это процесс, который завершил свою работу, 
