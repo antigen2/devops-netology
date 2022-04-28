@@ -1,8 +1,8 @@
 ## Элементы безопасности информационных систем ##
 1. 
-![bitwarden](img/bitwarden.png "bitwarden")
+![bitwarden](img/bitwarden.png "bitwarden") \
 2. 
-![bitwarden auth](img/bitwarden_auth.png "bitwarden auth")
+![bitwarden auth](img/bitwarden_auth.png "bitwarden auth") \
 3.
 ```bash
 root@kenny:/etc/ssl# mkdir apache2
@@ -65,7 +65,7 @@ root@kenny:/etc/ssl/apache2# cat /var/www/test.ru/index.html
 </html>
 ```
 Подключаемся к веб-серверу:
-![test.ru](img/test.ru.png "test.ru")
+![test.ru](img/test.ru.png "test.ru") \
 4. 
 ```bash
 antigen@kenny:~/git-rep/testssl.sh$ ./testssl.sh  -U --sneaky https://4pda.to/
