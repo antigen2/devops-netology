@@ -36,7 +36,6 @@
 import socket
 import os
 import json
-from unittest.mock import DEFAULT
 import yaml
 from sys import argv
 
