@@ -1,0 +1,4 @@
+итого 12K
+drwxr-xr-x 3 antigen antigen 4,0K июн 27 15:30 .
+drwxr-xr-x 4 antigen antigen 4,0K июн 27 15:57 ..
+drwxr-xr-x 2 antigen antigen 4,0K июн 27 15:59 data
