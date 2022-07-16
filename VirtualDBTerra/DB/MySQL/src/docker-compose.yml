@@ -1,0 +1,27 @@
+version: '2.7'
+
+networks:
+  mysqlnet:
+    driver: bridge
+    name: mysql_net
+
+volumes:
+  mysql_data: {}
+
+services:
+  mysql:
+    image: mysql:8
+    restart: always
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: passwd
+      MYSQL_USER: netology
+      MYSQL_PASSWORD: passwd
+      MYSQL_DATABASE: test_db
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./data:/docker-entrypoint-initdb.d
+      - ./request:/request
+      - ./my.cnf:/etc/mysql/my.cnf
+    networks:
+      - mysqlnet
