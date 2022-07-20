@@ -1,0 +1,22 @@
+version: '2.7'
+
+networks:
+  mynet:
+    driver: bridge
+
+volumes:
+  pg_data: {}
+
+services:
+
+  db:
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: netology
+      POSTGRES_PASSWORD: passwd
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./request:/request
+    networks:
+      - mynet
