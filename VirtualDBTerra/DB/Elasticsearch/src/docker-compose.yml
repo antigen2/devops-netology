@@ -1,0 +1,18 @@
+version: '2.7'
+
+networks:
+  mynet:
+    driver: bridge
+
+volumes:
+  backup: {}
+
+services:
+  db:
+    image: antigen2/elasticsearch:8.3.2
+    restart: always
+    container_name: elasticsearch
+    networks:
+      - mynet
+    volumes:
+      - ./scr:/scr
