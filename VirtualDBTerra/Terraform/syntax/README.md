@@ -97,4 +97,4 @@ compute-default-zone: ru-central1-c
 ### Ответ
 
 Свой образ ami можно создать с помощью `Packer` \
-[Ссылка](https://github.com/antigen2/devops-netology/tree/main/VirtualDBTerra/Terraform/syntax) на репозиторий с исходной конфигурацией терраформа
+[Ссылка](https://github.com/antigen2/devops-netology/tree/main/VirtualDBTerra/Terraform/syntax/src/terraform) на репозиторий с исходной конфигурацией терраформа
