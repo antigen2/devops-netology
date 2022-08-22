@@ -19,28 +19,23 @@ variable "yc_zone" {
 }
 
 locals {
-  news_cores = {
-    default = 2
+# id vm для перебора for
+  id = toset(
+    ["1", "2"]
+  )
+  my_vm_cores = {
     stage = 2
     prod = 2
   }
-  news_disk_size = {
-    default = 20
+  my_vm_disk_size = {
     stage = 20
     prod = 40
   }
-  news_instance_count = {
-    default = 1
+  my_vm_instance_count = {
     stage = 1
     prod = 2
   }
   vpc_subnet = {
-    default = [
-      {
-        zone            = var.yc_zone
-        v4_cidr_blocks  = ["10.10.1.0/24"]
-      }
-    ]
     stage = [
       {
         zone            = var.yc_zone

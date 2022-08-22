@@ -1,35 +1,37 @@
 # WORKSPACE=stage make all
+# WORKSPACE=prod make all
 
 WORKSPACE?=default
 
 all: init workspace plan apply #pause deploy
+all_1: init plan apply
 
-cd_terra:
-	cd ./terraform
+#cd_terra:
+#	cd ./terraform
 
 init:
-	cd_terra && terraform init
+	cd ./terraform && terraform init
 
 workspace:
-	cd_terra && terraform workspace new ${WORKSPACE}
+	cd ./terraform && terraform workspace new ${WORKSPACE}
 
 set_workspace:
-	cd_terra && terraform workspace select ${WORKSPACE}
+	cd ./terraform && terraform workspace select ${WORKSPACE}
 
 plan: set_workspace
-	cd_terra && terraform plan
+	cd ./terraform && terraform plan
 
 apply: set_workspace
-	cd_terra && terraform apply -auto-approve
+	cd ./terraform && terraform apply -auto-approve
 
 destroy: set_workspace
-	cd_terra && terraform destroy -auto-approve
+	cd ./terraform && terraform destroy -auto-approve
 
 clean:
-	cd_terra &&  rm -f terraform.tfplan
-	cd_terra &&  rm -f .terraform.lock.hcl
-	cd_terra &&  rm -fr terraform.tfstate*
-	cd_terra &&  rm -fr .terraform/
+	cd ./terraform &&  rm -f terraform.tfplan
+	cd ./terraform &&  rm -f .terraform.lock.hcl
+	cd ./terraform &&  rm -fr terraform.tfstate*
+	cd ./terraform &&  rm -fr .terraform/
 
 #pause:
 #	echo "Wait for 30 seconds stupid Yandex Cloud creating a VM's..."
