@@ -77,3 +77,7 @@ antigen@gramm:~/netology/devops-netology/VirtualDBTerra/Terraform/basic/src/terr
 * prod
   stage
 ```
+```bash
+antigen@gramm:~/netology/devops-netology/VirtualDBTerra/Terraform/basic/src/terraform$ terraform plan -no-color > ../plan-prod.txt
+```
+[plan-prod.txt](https://github.com/antigen2/devops-netology/tree/main/VirtualDBTerra/Terraform/basic/plan-prod.txt)
