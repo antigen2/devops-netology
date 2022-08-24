@@ -1,0 +1,23 @@
+---
+repos:
+  - id: github.com/antigen2/devops-netology
+    branch: /.*/
+    apply_requirements: [approved, mergeable]
+    workflow: custom
+    allowed_overrides: [apply_requirements, workflow, delete_source_branch_on_merge]
+    allowed_workflows: [custom]
+    allow_custom_workflows: true
+    delete_source_branch_on_merge: false
+
+workflows:
+  custom:
+    plan:
+      steps:
+        - run: echo Start plan
+        - init
+        - plan:
+          extra_args: [ "-lock", "false" ]
+    apply:
+      steps:
+        - run: echo Start apply
+        - apply
