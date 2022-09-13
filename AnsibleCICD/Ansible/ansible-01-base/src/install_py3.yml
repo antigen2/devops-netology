@@ -1,0 +1,17 @@
+---
+- hosts: all
+  gather_facts: no
+  vars:
+    pkg: python3
+
+  tasks:
+
+    - name: Check for Python
+      raw: test -e /usr/bin/python3
+      changed_when: false
+      failed_when: false
+      register: check_python
+
+    - name: Install Python
+      raw: test -e /usr/bin/apt && (apt -y update && apt install -y {{ pkg }}) || (yum -y install {{ pkg }})
+      when: check_python.rc != 0

@@ -1,0 +1,26 @@
+---
+- hosts: all
+  vars:
+    container_image:
+      - centos:7
+      - ubuntu:20.04
+    container_command: sleep infinity
+
+  tasks:
+
+    - name: Pull Docker Image
+      community.docker.docker_image:
+        name: "{{ item }}"
+        source: pull
+      loop: "{{ container_image }}"
+
+    - name: Create container
+      community.docker.docker_container:
+        name: "{{ item.split(':')[0] }}"
+        image: "{{ item }}"
+        state: started
+        command: "{{ container_command }}"
+      loop: "{{ container_image }}"
+
+    - name: Rename centos container
+      shell: docker rename centos centos7
