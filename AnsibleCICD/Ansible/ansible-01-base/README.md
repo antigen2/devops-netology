@@ -38,7 +38,8 @@ ok: [localhost] => {
 PLAY RECAP **********************************************************************************************************************************************************
 localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
-`12`
+`12` 
+
 2. 
 ```bash
 antigen@kenny:~/my/09/src/playbook$ cat group_vars/all/examp.yml
@@ -271,6 +272,7 @@ ssh                            connect via SSH client binary
 winrm                          Run tasks over Microsoft's WinRM
 ```
 `local                          execute on controller`
+
 10. 
 ```bash
 antigen@kenny:~/my/09/src/playbook$ cat inventory/prod.yml
@@ -328,7 +330,7 @@ centos7                    : ok=3    changed=0    unreachable=0    failed=0    s
 localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
-12. (Ссылка)[]
+12. (Ссылка)[https://github.com/antigen2/devops-netology/tree/main/AnsibleCICD/Ansible/ansible-01-base]
 ## Необязательная часть
 
 1. При помощи `ansible-vault` расшифруйте все зашифрованные файлы с переменными.
@@ -419,5 +421,5 @@ centos7                    : ok=3    changed=0    unreachable=0    failed=0    s
 localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
-4. 
+4.
 
