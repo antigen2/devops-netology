@@ -4,3 +4,5 @@ key.json
 .terraform*
 terraform.*
 .env
+/AnsibleCICD/Ansible/ansible-02-playbook/src/vagrant/.vagrant/
+

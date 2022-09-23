@@ -46,7 +46,7 @@ antigen@kenny:~/my/09/src/playbook$ cat group_vars/all/examp.yml
 ---
   some_fact: "all default fact"
 ```
-3. Dockerfile
+3. 
 Листинг `docker.yml`:
 ```yaml
 ---
@@ -422,4 +422,6 @@ localhost                  : ok=3    changed=0    unreachable=0    failed=0    s
 ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
 4.
+```bash
 
+```

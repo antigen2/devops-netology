@@ -1,0 +1,36 @@
+$clickhouse_vm = "clickhouse-01"
+$clickhouse_ip = "192.168.3.21"
+$vector_vm = "vector-01"
+$vector_ip = "192.168.3.22"
+$box = "bento/centos-7"
+$ssh_public_key_path = "~/.ssh/id_rsa.pub"
+
+Vagrant.configure("2") do |config|
+  config.vm.define $clickhouse_vm do |config|
+    config.vm.provider "virtualbox" do |vb|
+      vb.cpus = "1"
+      vb.memory = "1024"
+    end
+    config.vm.box = $box
+    config.vm.hostname = $clickhouse_vm
+    config.vm.network "public_network", ip: $clickhouse_ip
+    config.vm.provision 'file',
+        source: $ssh_public_key_path,
+        destination: '~/.ssh/authorized_keys'
+  end
+end
+
+Vagrant.configure("2") do |config|
+    config.vm.define $vector_vm do |config|
+        config.vm.provider "virtualbox" do |vb|
+          vb.cpus = "1"
+          vb.memory = "1024"
+        end
+      config.vm.box = $box
+      config.vm.hostname = $vector_vm
+      config.vm.network "public_network", ip: $vector_ip
+      config.vm.provision 'file',
+      source: $ssh_public_key_path,
+      destination: '~/.ssh/authorized_keys'
+    end
+  end
