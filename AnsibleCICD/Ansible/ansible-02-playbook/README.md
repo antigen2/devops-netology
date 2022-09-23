@@ -27,23 +27,22 @@
 clickhouse:
   hosts:
     clickhouse-01:
-      ansible_host: <IP_here>
+      ansible_host: 192.168.3.21
+      ansible_user: vagrant
 
 vector:
   hosts:
     vector-01:
-      ansible_host: ip
-
-nginx:
-  hosts:
-    nginx-01:
-      ansible_host: ip
+      ansible_host: 192.168.3.22
+      ansible_user: vagrant
 ```
 2. Листинг `site.yml`:
 ```yaml
 ---
 - name: Install Clickhouse
   hosts: clickhouse
+  tags:
+    - clickhouse
   handlers:
     - name: Start clickhouse service
       become: true
@@ -62,9 +61,10 @@ nginx:
       rescue:
         - name: Get clickhouse distrib
           ansible.builtin.get_url:
-            url: "https://packages.timber.io/vector/{{ vector_version }}/vector-{{ vector_version }}-1.x86_64.rpm"
+            url: "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm"
             dest: "./clickhouse-common-static-{{ clickhouse_version }}.rpm"
             mode: 644
+          register: copied
     - name: Install clickhouse packages
       become: true
       ansible.builtin.yum:
@@ -73,6 +73,11 @@ nginx:
           - clickhouse-client-{{ clickhouse_version }}.rpm
           - clickhouse-server-{{ clickhouse_version }}.rpm
       notify: Start clickhouse service
+    - name: Start clickhouse server
+      become: true
+      systemd:
+        name: clickhouse-server
+        state: started
     - name: Create database
       ansible.builtin.command: "clickhouse-client -q 'create database logs;'"
       register: create_db
@@ -81,35 +86,18 @@ nginx:
 
 - name: Install Vector
   hosts: vector
+  tags:
+    - vector
   handlers:
     - name: Start Vector service
       become: true
       ansible.builtin.service:
         name: vector
-        state: restarted
+        state: started
   tasks:
-    # Загрузка дистрибутива
-    - name: Get Vector distrib
-      ansible.builtin.get_url:
-        url: "https://github.com/vectordotdev/vector/releases/download/v{{ vector_version }}/vector-{{ vector_version }}-1.{{ ansible_facts['ansible_architecture'] }}.rpm"
-        dest: "./vector-{{ vector_version }}.rpm"
-        mode: 644
-    # Установка дистрибутива
     - name: Install Vector package
       become: true
-      ansible.builtin.yum:
-        name:
-          - vector-{{ vector_version }}.rpm
-        notify: Start Vector service
-    # Создание файла конфигурации для vector.
-    - name: Deploy config Vector
-      ansible.builtin.template:
-        src: vector.j2
-        dest: "{{ vector_config_path }}"
-        mode: 0666
-        validate: vector validate --no-environment --config-yaml %s
-      become: true
-      notify: Start Vector service
+      ansible.builtin.raw: curl -1sLf 'https://repositories.timber.io/public/vector/cfg/setup/bash.rpm.sh'
 ```
 3. Использовал модули `get_url` и `template`.
 5. Исправил ошибки. Осталось предупреждение. Как убрать не понял:
