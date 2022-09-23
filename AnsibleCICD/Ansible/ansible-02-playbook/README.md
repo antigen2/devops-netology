@@ -147,3 +147,5 @@ PLAY RECAP *********************************************************************
 clickhouse-01              : ok=6    changed=4    unreachable=0    failed=0    skipped=0    rescued=1    ignored=0   
 vector-01                  : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 ```
+
+(https://github.com/antigen2/devops-netology/tree/main/AnsibleCICD/Ansible/ansible-02-playbook/src)[https://github.com/antigen2/devops-netology/tree/main/AnsibleCICD/Ansible/ansible-02-playbook/src]

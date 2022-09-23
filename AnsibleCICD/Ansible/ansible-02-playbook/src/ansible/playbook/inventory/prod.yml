@@ -10,4 +10,3 @@ vector:
     vector-01:
       ansible_host: 192.168.3.22
       ansible_user: vagrant
-
