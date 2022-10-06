@@ -1,5 +1,4 @@
 # Playbook
-==========
 Playbook устанавливает и конфигурирует `clickhouse`, `lighthouse` и `vector`
 
 ## Clickhouse
