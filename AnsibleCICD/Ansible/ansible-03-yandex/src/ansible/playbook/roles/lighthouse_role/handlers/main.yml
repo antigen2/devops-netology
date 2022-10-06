@@ -1,0 +1,6 @@
+---
+# handlers file for lighthouse_role
+- name: Reload nginx service
+  become: true
+  command: nginx -s reload
+  

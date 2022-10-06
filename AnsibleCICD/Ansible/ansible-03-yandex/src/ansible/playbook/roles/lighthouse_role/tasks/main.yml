@@ -1,0 +1,23 @@
+---
+# tasks file for lighthouse_role
+# Ставим Git
+- name: Install Git
+  become: true
+  yum:
+    name: git
+    state: present
+# Скачиваем с github.com lighthouse
+- name: Copy lighthouse from git
+  git:
+    repo: "{{ lighthouse_git }}"
+    version: master
+    dest: "{{ lighthouse_dir }}"
+  become: true
+# Создаем конфиг для nginx 
+- name: Create config
+  become: true
+  template:
+    src: lighthouse.j2
+    dest: /etc/nginx/conf.d/default.conf
+    mode: 0644
+  notify: Reload nginx service

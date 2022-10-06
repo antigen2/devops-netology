@@ -1,0 +1,4 @@
+---
+# defaults file for lighthouse_role
+clickhouse_user: netology
+clickhouse_password: netology

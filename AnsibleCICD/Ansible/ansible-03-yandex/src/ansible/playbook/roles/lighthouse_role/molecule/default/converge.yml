@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: "Include netology.lighthouse_role"
+      ansible.builtin.include_role:
+        name: "netology.lighthouse_role"

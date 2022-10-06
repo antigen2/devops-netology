@@ -1,0 +1,59 @@
+---
+# tasks file for clickhouse_role
+- block:
+    - name: Get clickhouse distrib
+      ansible.builtin.get_url:
+        url: "https://packages.clickhouse.com/rpm/stable/{{ item }}-{{ clickhouse_version }}.noarch.rpm"
+        dest: "./{{ item }}-{{ clickhouse_version }}.rpm"
+        mode: 0755
+      with_items: "{{ clickhouse_packages }}"
+  rescue:
+    - name: Get clickhouse distrib
+      ansible.builtin.get_url:
+        url: "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm"
+        dest: "./clickhouse-common-static-{{ clickhouse_version }}.rpm"
+        mode: 0755
+- name: Install clickhouse packages
+  become: true
+  ansible.builtin.yum:
+    disable_gpg_check: yes
+    name:
+      - clickhouse-common-static-{{ clickhouse_version }}.rpm
+      - clickhouse-client-{{ clickhouse_version }}.rpm
+      - clickhouse-server-{{ clickhouse_version }}.rpm
+  notify: Start clickhouse service
+# Настройка конфига clickhouse
+- name: Deploy config clickhouse
+  become: true
+  ansible.builtin.template:
+    src: config.yaml.j2
+    dest: "{{ clickhouse_config_file }}"
+    mode: 0644
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+# Настройка конфига пользователей clickhouse
+- name: Deploy users config clickhouse
+  become: true
+  ansible.builtin.template:
+    src: users.yaml.j2
+    dest: "{{ clickhouse_users_file }}"
+    mode: 0644
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+# Принудительное использование handlers (запуск сервиса)
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+# Пауза. Даем время для запуска демона
+- name: Pause 5 sec
+  ansible.builtin.pause:
+    seconds: 5
+# Создание БД для логов
+- name: Create database for logs
+  ansible.builtin.command: "clickhouse-client -q 'create database logs;'"
+  register: create_db
+  failed_when: create_db.rc != 0 and create_db.rc !=82
+  changed_when: create_db.rc == 0
+# Создание таблицы для хранения логов
+- name: Create table for logs
+  ansible.builtin.command: clickhouse-client -q '{{ clickhouse_create_table }}'
+  register: create_table
