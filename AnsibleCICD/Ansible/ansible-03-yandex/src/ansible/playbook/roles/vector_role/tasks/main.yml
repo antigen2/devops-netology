@@ -10,7 +10,7 @@
 - name: Install Vector packages
   become: true
   ansible.builtin.yum:
-    disable_gpg_check: yes
+    disable_gpg_check: true
     name: vector-{{ vector_vers }}.{{ ansible_architecture }}.rpm
     state: present
   notify: Start Vector service
@@ -28,7 +28,7 @@
 # Создание каталога для sources local_logs
 - name: Creates directory
   become: true
-  file:
+  ansible.builtin.file:
     path: /var/lib/vector/local_logs
     state: directory
     owner: "{{ ansible_user_id }}"
@@ -37,16 +37,16 @@
 # Создаем конфиг демона
 - name: Create systemd unit Vector
   become: true
-  template:
+  ansible.builtin.template:
     src: service.j2
     dest: /etc/systemd/system/vector.service
     mode: 0644
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_gid }}"
 # Запускаем демон
-# - name: Start Vector service
-#   become: true
-#   systemd:
-#     name: vector
-#     state: started
-#     daemon_reload: true
+- name: Start Vector service
+  become: true
+  ansible.builtin.systemd:
+    name: vector
+    state: started
+    daemon_reload: true

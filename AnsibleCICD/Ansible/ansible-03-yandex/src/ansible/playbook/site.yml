@@ -11,18 +11,24 @@
 # Установка Clickhouse
 - name: Install clickhouse
   hosts: clickhouse
+  tags:
+    - clickhouse
   roles:
     - role: clickhouse_role
 
 # Установка Vector
 - name: Install vector
   hosts: vector
+  tags:
+    - vector
   roles:
     - role: vector_role
 
 # Установка Lighthouse
 - name: Install lighthouse
   hosts: lighthouse
+  tags:
+    - lighthouse
   handlers:
     - name: Start nginx service
       become: true
@@ -32,18 +38,18 @@
   pre_tasks:
     - name: Install epel-release
       become: true
-      yum:
+      ansible.builtin.yum:
         name: epel-release
         state: present
     - name: Install Nginx
       become: true
-      yum:
+      ansible.builtin.yum:
         name: nginx
         state: present
       notify: Start nginx service
     - name: Create Nginx config
       become: true
-      template:
+      ansible.builtin.template:
         src: nginx.j2
         dest: /etc/nginx/nginx.conf
         mode: 0644
@@ -52,5 +58,5 @@
     - role: lighthouse_role
   post_tasks:
     - name: Show connect URL lighthouse
-      debug:
+      ansible.builtin.debug:
         msg: "http://{{ ansible_host }}/#http://{{ hostvars['clickhouse-01'].ansible_host }}:8123/?user={{ clickhouse_user }}"

@@ -9,10 +9,10 @@ galaxy_info:
   min_ansible_version: 2.1
 
   platforms:
-    - name: Centos
+    - name: 'Centos'
       version:
-      - 7
-      - 8
+        - '7'
+        - '8'
 
   galaxy_tags: []
     # List tags for your role here, one per line. A tag is a keyword that describes

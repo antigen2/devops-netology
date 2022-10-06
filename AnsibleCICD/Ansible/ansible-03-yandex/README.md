@@ -22,3 +22,66 @@
 
 ## Ответ
 
+1. `play` для `lighthouse`:
+```yaml
+# Установка Lighthouse
+- name: Install lighthouse
+  hosts: lighthouse
+  tags:
+    - lighthouse
+  handlers:
+    - name: Start nginx service
+      become: true
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+  pre_tasks:
+    - name: Install epel-release
+      become: true
+      ansible.builtin.yum:
+        name: epel-release
+        state: present
+    - name: Install Nginx
+      become: true
+      ansible.builtin.yum:
+        name: nginx
+        state: present
+      notify: Start nginx service
+    - name: Create Nginx config
+      become: true
+      ansible.builtin.template:
+        src: nginx.j2
+        dest: /etc/nginx/nginx.conf
+        mode: 0644
+      notify: Start nginx service
+  roles:
+    - role: lighthouse_role
+  post_tasks:
+    - name: Show connect URL lighthouse
+      ansible.builtin.debug:
+        msg: "http://{{ ansible_host }}/#http://{{ hostvars['clickhouse-01'].ansible_host }}:8123/?user={{ clickhouse_user }}"
+```
+
+4. Листинг `prod.yml`:
+```yaml
+---
+clickhouse:
+  hosts:
+    clickhouse-01:
+      ansible_host: 51.250.47.146
+      ansible_user: cloud-user
+
+vector:
+  hosts:
+    vector-01:
+      ansible_host: 51.250.36.155
+      ansible_user: cloud-user
+
+lighthouse:
+  hosts:
+    lighthouse-01:
+      ansible_host: 51.250.45.92
+      ansible_user: cloud-user
+```
+9. Ссылка: [README.md](https://github.com/antigen2/devops-netology/blob/main/AnsibleCICD/Ansible/ansible-03-yandex/src/README.md)
+10. [Ссылка]()

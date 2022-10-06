@@ -3,4 +3,3 @@
 - name: Reload nginx service
   become: true
   command: nginx -s reload
-  
