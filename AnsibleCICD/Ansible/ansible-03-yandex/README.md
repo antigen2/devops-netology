@@ -84,4 +84,4 @@ lighthouse:
       ansible_user: cloud-user
 ```
 9. Ссылка: [README.md](https://github.com/antigen2/devops-netology/blob/main/AnsibleCICD/Ansible/ansible-03-yandex/src/README.md)
-10. [Ссылка]()
+10. [Ссылка](https://github.com/antigen2/devops-netology/tree/08-ansible-03-yandex/AnsibleCICD/Ansible/ansible-03-yandex/src)
