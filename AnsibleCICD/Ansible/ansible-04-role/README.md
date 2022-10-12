@@ -32,8 +32,8 @@
 ## Ответ
 
 Ссылки:
-- (clickhouse-role)[https://github.com/antigen2/clickhouse-role]
-- (vector-role)[https://github.com/antigen2/vector-role]
-- (lighthouse-role)[https://github.com/antigen2/lighthouse-role]
-
-- (playbook)[https://github.com/antigen2/08-ansible-04-role]
+- [playbook](https://github.com/antigen2/08-ansible-04-role)
+- Роли:
+  - [clickhouse-role](https://github.com/antigen2/clickhouse-role)
+  - [vector-role](https://github.com/antigen2/vector-role)
+  - [lighthouse-role](https://github.com/antigen2/lighthouse-role)
