@@ -1,0 +1,8 @@
+---
+- name: Test module
+  hosts: localhost
+  tasks:
+    - name: Create test_path
+      my_own_modoule:
+        path: test_path
+        content: my first test line
