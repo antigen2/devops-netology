@@ -1,0 +1,10 @@
+---
+# vars file for clickhouse_role
+clickhouse_version: "22.3.3.44"
+clickhouse_packages:
+  - clickhouse-client
+  - clickhouse-server
+  - clickhouse-common-static
+clickhouse_config_file: /etc/clickhouse-server/config.yaml
+clickhouse_users_file: /etc/clickhouse-server/users.yaml
+clickhouse_create_table: "CREATE TABLE IF NOT EXISTS  logs.vector_internal_logs (message String) ENGINE = MergeTree() ORDER BY tuple();"

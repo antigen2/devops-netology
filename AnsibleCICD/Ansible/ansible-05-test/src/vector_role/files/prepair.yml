@@ -1,0 +1,74 @@
+---
+- name: Prepeir
+  hosts: all
+  pre_tasks:
+    - name: Check for python3
+      ansible.builtin.command: test -e /usr/bin/python3
+      changed_when: false
+      failed_when: false
+      register: py_check
+    - name: Check for apt-get
+      ansible.builtin.command: test -e /usr/bin/apt-get
+      changed_when: false
+      failed_when: false
+      register: apt_check
+    - name: Check for dnf
+      ansible.builtin.command: test -e /usr/bin/dnf
+      changed_when: false
+      failed_when: false
+      register: dnf_check
+    - name: Check for yum
+      ansible.builtin.command: test -e /usr/bin/yum
+      changed_when: false
+      failed_when: false
+      register: yum_check
+  tasks:
+    - name: Install python3 | apt-get
+      become: true
+      ansible.builtin.apt:
+        name: python3
+        state: present
+      when: py_check != 0 and apt_check == 0
+    - name: Install python3 | yum
+      block:
+      - name: Fix yum
+        become: true
+        ansible.builtin.script:
+          cmd: fix_yum.sh
+      - name: Install python3
+        become: true
+        ansible.builtin.yum:
+          name: python3
+          state: present
+      when: py_check != 0 and yum_check == 0
+    - name: Download SystemD replacer
+      become: true
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/gdraheim/docker-systemctl-replacement/master/files/docker/systemctl3.py
+        dest: /usr/bin/systemctl
+        mode: "+x"
+        force: true
+    - name: Create systemd directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        recurse: true
+      loop:
+        - /run/systemd/system
+        - /usr/lib/systemd/system
+    - name: Renew system info
+      ansible.builtin.setup:
+    - name: Get clickhouse ip from docker engine
+      ansible.builtin.command: "docker inspect -f {{'{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}'}} clickhouse-01"
+      register: cmd_res
+      changed_when: false
+      failed_when: cmd_res.rc != 0
+      delegate_to: localhost
+    - name: Set Clickhouse IP to facts
+      ansible.builtin.set_fact:
+        clickhouse_host: "{{ cmd_res.stdout }}"
+      when: cmd_res.rc == 0
+
+    - name: "Include vector_role"
+      include_role:
+        name: "vector_role"

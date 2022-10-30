@@ -1,4 +1,5 @@
 .idea/*
+.vscode
 .vagrant
 key.json
 .terraform*
@@ -6,4 +7,4 @@ terraform.*
 .env
 .git
 .idea
-
+venv

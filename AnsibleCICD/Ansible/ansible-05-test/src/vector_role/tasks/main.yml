@@ -1,0 +1,73 @@
+---
+# tasks file for vector-role
+# Скачивание пакета vector
+#   rpm
+- name: Get Vector distrib <CentOS>
+  ansible.builtin.get_url:
+    url: "https://packages.timber.io/vector/{{ vector_vers }}/vector-{{ vector_vers }}-1.x86_64.rpm"
+    dest: "./vector-{{ vector_vers }}.{{ ansible_architecture }}.rpm"
+    mode: 0644
+  when: ansible_facts.distribution == 'CentOS'
+#   deb
+- name: Get Vector distrib <Ubuntu>
+  ansible.builtin.get_url:
+    url: "https://packages.timber.io/vector/{{ vector_vers }}/vector_{{ vector_vers }}-1_amd64.deb"
+    dest: "./vector-{{ vector_vers }}.{{ ansible_architecture }}.deb"
+    mode: 0644
+  when: ansible_facts.distribution == 'Ubuntu'
+
+# Установка пакета vector
+#   rpm
+- name: Install Vector packages <CentOS>
+  become: true
+  ansible.builtin.yum:
+    disable_gpg_check: true
+    name: vector-{{ vector_vers }}.{{ ansible_architecture }}.rpm
+    state: present
+  notify: Start Vector service
+  when: ansible_facts.distribution == 'CentOS'
+#   deb
+- name: Install Vector packages <Ubuntu>
+  become: true
+  ansible.builtin.apt:
+    deb: vector-{{ vector_vers }}.{{ ansible_architecture }}.deb
+    state: present
+  notify: Start Vector service
+  when: ansible_facts.distribution == 'Ubuntu'
+
+# Создание файла конфигурации для vector.
+- name: Deploy config Vector
+  ansible.builtin.template:
+    src: config.j2
+    dest: "{{ vector_config_file }}"
+    mode: 0644
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+    validate: vector validate --no-environment --config-yaml %s
+  become: true
+  notify: Start Vector service
+# Создание каталога для sources local_logs
+- name: Creates directory
+  become: true
+  ansible.builtin.file:
+    path: /var/lib/vector/local_logs
+    state: directory
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+    mode: 0644
+# Создаем конфиг демона
+- name: Create systemd unit Vector
+  become: true
+  ansible.builtin.template:
+    src: service.j2
+    dest: /etc/systemd/system/vector.service
+    mode: 0644
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+# Запускаем демон
+- name: Start Vector service
+  become: true
+  ansible.builtin.systemd:
+    name: vector
+    state: started
+    daemon_reload: true
