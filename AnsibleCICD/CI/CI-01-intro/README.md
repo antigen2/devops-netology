@@ -36,5 +36,5 @@
 Если всё отработало в рамках ожидания - выгрузить схемы workflow для импорта в XML. Файлы с workflow приложить к решению задания.
 
 ### Ссылки
-[Схема bug.xml](https://github.com/antigen2/devops-netology/tree/main/AnsibleCICD/CI-01-intro/src/bug.xml)
-[Схема other.xml](https://github.com/antigen2/devops-netology/tree/main/AnsibleCICD/CI-01-intro/src/other.xml)
+[Схема bug.xml](https://github.com/antigen2/devops-netology/blob/main/AnsibleCICD/CI/CI-01-intro/src/bug.xml)
+[Схема other.xml](https://github.com/antigen2/devops-netology/blob/main/AnsibleCICD/CI/CI-01-intro/src/other.xml)
