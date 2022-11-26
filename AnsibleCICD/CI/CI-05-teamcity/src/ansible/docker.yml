@@ -1,0 +1,86 @@
+---
+- name: Install epel-release
+  hosts: all
+  become: true
+  tasks:
+    - name: Instll It
+      ansible.builtin.yum:
+        name: epel-release
+        state: present
+
+- name: Install and runing Docker service
+  hosts: all
+  become: true
+  tasks:
+    - name: Get Docker install script
+      ansible.builtin.get_url:
+        url: https://get.docker.com/
+        dest: /opt/install_docker.sh
+        mode: '+x'
+    - name: Run Docker install script
+      ansible.builtin.command: sh /opt/install_docker.sh
+    - name: Run Docker Service
+      ansible.builtin.service:
+        name: docker
+        state: started
+
+- name: Installing docker-compose
+  hosts: all
+  tags:
+    - docker-compose
+  tasks:
+    - name: Get docker-compose
+      become: true
+      ansible.builtin.get_url:
+        url: 'https://github.com/docker/compose/releases/download/v2.13.0/docker-compose-linux-x86_64'
+        dest: '/usr/local/bin/docker-compose'
+        mode: '0777'
+
+- name: useradd to docker group
+  hosts: all
+  tasks:
+    - name: add user
+      become: true
+      ansible.builtin.command: usermod -a -G docker centos
+
+- name: Create dirs
+  hosts: all
+  become: true
+  tasks:
+    - name: mkdir /opt/teamcity/data
+      ansible.builtin.file:
+        path: /opt/teamcity/data
+        state: directory
+        owner: centos
+        mode: '0777'
+    - name: mkdir /opt/teamcity/logs
+      ansible.builtin.file:
+        path: /opt/teamcity/logs
+        state: directory
+        owner: centos
+        mode: '0777'
+    - name: mkdir /opt/teamcity/agent
+      ansible.builtin.file:
+        path: /opt/teamcity/agent
+        state: directory
+        owner: centos
+        mode: '0777'
+
+- name: Copy docker-compose.yml
+  hosts: all
+  tasks:
+    - name: Copy compose file
+      become: true
+      ansible.builtin.copy:
+        src: ../teamcity/docker-compose.yml
+        dest: /opt/teamcity/docker-compose.yml
+        owner: centos
+        mode: '0644'
+#    - name: Copy xml file
+#      become: true
+#      ansible.builtin.copy:
+#        src: ../teamcity/settings.xml
+#        dest: /opt/teamcity/settings.xml
+#        owner: centos
+#        mode: '0644'
+

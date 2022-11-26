@@ -1,0 +1,6 @@
+---
+docker:
+  hosts:
+    teamcity-01:
+      ansible_host: 51.250.37.90
+      ansible_user: centos
