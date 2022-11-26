@@ -24,7 +24,7 @@ PLAY RECAP *********************************************************************
 teamcity-01                : ok=17   changed=11   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0  
 ```
 ```bash
-antigen@gramm:~/netology/devops-netology/AnsibleCICD/CI/CI-05-teamcity/src/ansible$ ssh centos@51.250.35.253
+antigen@gramm:~/netology/devops-netology/AnsibleCICD/CI/CI-05-teamcity/src/ansible$ ssh centos@51.250.37.90
 ...
 [centos@ef39ss2bkr3dcj1acg1j ~]$ cd /opt/teamcity/
 [centos@ef39ss2bkr3dcj1acg1j teamcity]$ ls
