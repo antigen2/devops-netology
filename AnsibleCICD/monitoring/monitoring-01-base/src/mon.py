@@ -67,7 +67,7 @@ def get_uptime() -> dict:
     Getting uptime
     :return: dict of uptime
     """
-    plist = get_params("uptime")
+    plist = get_params('uptime')
     return dict(up_time=plist[0], idle_time=plist[1])
 
 

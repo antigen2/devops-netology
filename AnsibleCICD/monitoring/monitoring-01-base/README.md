@@ -80,7 +80,7 @@ import subprocess
 
 PROC_PATH = '/proc'
 # LOG_PATH = os.path.join(os.environ['HOME'], 'monitoring')
-LOG_PATH = /var/log
+LOG_PATH = '/var/log'
 LOG_FILE_TEMPLATE = '-awesome-monitoring.log'
 
 
@@ -139,14 +139,14 @@ def get_uptime() -> dict:
     Getting uptime
     :return: dict of uptime
     """
-    plist = get_params("uptime")
+    plist = get_params('uptime')
     return dict(up_time=plist[0], idle_time=plist[1])
 
 
 if __name__ == '__main__':
 
-    if not os.path.exists(LOG_PATH):
-        os.makedirs(LOG_PATH)
+    # if not os.path.exists(LOG_PATH):
+    #     os.makedirs(LOG_PATH)
 
     log = dict()
     log['timestamp'] = int(datetime.datetime.now().timestamp())
