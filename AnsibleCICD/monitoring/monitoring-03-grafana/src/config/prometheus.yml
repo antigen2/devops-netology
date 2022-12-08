@@ -1,0 +1,22 @@
+---
+# Глобальные настройки
+global:
+  # интервал сбора метрик
+  scrape_interval: 10s
+  # интервал сверки с правилами
+  evaluation_interval: 10s
+
+# секция с базовыми настройками сбора метрик на сервере
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets:
+        - localhost:9090
+  - job_name: node-exporter
+    static_configs:
+      - targets:
+        - node-exporter:9100
+  - job_name: cadvisor
+    static_configs:
+      - targets:
+        - cadvisor:8080

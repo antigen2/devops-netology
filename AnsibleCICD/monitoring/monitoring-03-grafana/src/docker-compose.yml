@@ -1,0 +1,94 @@
+---
+version: '3.6'
+
+networks:
+  prometheus-net:
+    driver: bridge
+    name: prom-net
+
+volumes:
+  grafana_data: {}
+
+services:
+
+  prometheus:
+    image: prom/prometheus:v2.40.3
+    restart: always
+    container_name: prometheus
+    networks:
+      - prometheus-net
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+    depends_on:
+      - cadvisor
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.46.0
+    restart: always
+    container_name: cadvisor
+    networks:
+      - prometheus-net
+    ports:
+      - 8080:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    privileged: true
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7
+    restart: always
+    container_name: redis
+    networks:
+      - prometheus-net
+    ports:
+      - 6379:6379
+
+  node-exporter:
+      image: prom/node-exporter:v1.4.0
+      restart: always
+      container_name: node-exporter
+      networks:
+        - prometheus-net
+      volumes:
+          - /proc:/host/proc:ro
+          - /sys:/host/sys:ro
+          - /:/rootfs:ro
+          - /run/udev/data:/host/run/udev/data:ro
+      command:
+          - --path.procfs=/host/proc
+          - --path.sysfs=/host/sys
+          - --path.udev.data=/host/run/udev/data
+          - --collector.filesystem.mount-points-exclude
+          - ^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)
+      ports:
+          - 9100:9100
+      deploy:
+          mode: global
+
+  grafana:
+    image: grafana/grafana:9.3.1
+    restart: always
+    container_name: grafana
+    networks:
+      - prometheus-net
+    ports:
+      - 3000:3000
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    depends_on:
+      - prometheus
