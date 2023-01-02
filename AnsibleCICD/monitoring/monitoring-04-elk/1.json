@@ -1,0 +1,12 @@
+
+{
+  "@timestamp":"2022-12-16T18:29:37.504Z",
+  "log.level": "WARN",
+  "data_stream.dataset":"deprecation.elasticsearch",
+  "data_stream.namespace":"default",
+  "data_stream.type":"logs",
+  "elasticsearch.elastic_product_origin":"kibana",
+  "elasticsearch.event.category":"api",
+  "elasticsearch.http.request.x_opaque_id":"unknownId;kibana:task%20manager:run%20security%3Atelemetry-prebuilt-rule-alerts:security%3Atelemetry-prebuilt-rule-alerts%3A1.0.0",
+  "event.code":"deprecated_field_exclude",
+  "message":"Deprecated field [exclude] used, expected [excludes] instead" , "ecs.version": "1.2.0","service.name":"ES_ECS","event.dataset":"deprecation.elasticsearch","process.thread.name":"elasticsearch[es-hot][transport_worker][T#2]","log.logger":"org.elasticsearch.deprecation.xcontent.ParseField","trace.id":"6361cf3909569520ef679d3a3b7d5a9b","elasticsearch.cluster.uuid":"YNh9ZKEMRNiGcxbl2GPqjw","elasticsearch.node.id":"WcfBFEEVSB6F6bymfqzcaw","elasticsearch.node.name":"es-hot","elasticsearch.cluster.name":"es-docker-cluster"}
