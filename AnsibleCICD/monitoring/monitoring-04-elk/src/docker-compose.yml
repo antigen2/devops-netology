@@ -1,10 +1,12 @@
-version: "2.2"
+version: "3.6"
 
 services:
+
   setup:
-    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    image: "docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}"
+    container_name: "es-setup"
     volumes:
-      - certs:/usr/share/elasticsearch/config/certs
+      - ./certs:/usr/share/elasticsearch/config/certs
     user: "0"
     command: >
       bash -c '
@@ -60,19 +62,21 @@ services:
     depends_on:
       setup:
         condition: service_healthy
-    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    image: "docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}"
+    container_name: "es-node-01"
     volumes:
-      - certs:/usr/share/elasticsearch/config/certs
-      - esdata01:/usr/share/elasticsearch/data
+      - ./certs:/usr/share/elasticsearch/config/certs
+      - ./esdata01:/usr/share/elasticsearch/data
     ports:
       - ${ES_PORT}:9200
     environment:
       - node.name=es01
+      - node.roles=master,data_content,data_hot
       - cluster.name=${CLUSTER_NAME}
       - cluster.initial_master_nodes=es01,es02
       - discovery.seed_hosts=es02
+      - bootstrap.memory_lock=false
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-      - bootstrap.memory_lock=true
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
       - xpack.security.http.ssl.key=certs/es01/es01.key
@@ -86,10 +90,6 @@ services:
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=${LICENSE}
     mem_limit: ${MEM_LIMIT}
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
     healthcheck:
       test:
         [
@@ -103,16 +103,19 @@ services:
   es02:
     depends_on:
       - es01
-    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    image: "docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}"
+    container_name: "es-node-02"
     volumes:
-      - certs:/usr/share/elasticsearch/config/certs
-      - esdata02:/usr/share/elasticsearch/data
+      - ./certs:/usr/share/elasticsearch/config/certs
+      - ./esdata02:/usr/share/elasticsearch/data
     environment:
       - node.name=es02
+      - node.roles=master,data_warm
       - cluster.name=${CLUSTER_NAME}
       - cluster.initial_master_nodes=es01,es02
       - discovery.seed_hosts=es01
-      - bootstrap.memory_lock=true
+      - bootstrap.memory_lock=false
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
       - xpack.security.http.ssl.key=certs/es02/es02.key
@@ -126,10 +129,6 @@ services:
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=${LICENSE}
     mem_limit: ${MEM_LIMIT}
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
     healthcheck:
       test:
         [
@@ -146,17 +145,17 @@ services:
         condition: service_healthy
       es02:
         condition: service_healthy
-    image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
+    image: "docker.elastic.co/kibana/kibana:${STACK_VERSION}"
+    container_name: "es-kibana"
     volumes:
-      - certs:/usr/share/kibana/config/certs
-      - kibanadata:/usr/share/kibana/data
+      - ./certs:/usr/share/kibana/config/certs
+      - ./kibanadata:/usr/share/kibana/data
     ports:
       - ${KIBANA_PORT}:5601
     environment:
       - SERVERNAME=kibana
-#      - ELASTICSEARCH_URL="https://es01:9200"
-#      - ELASTICSEARCH_HOSTS=["https://es01:9200", "https://es02:9200"]
-      - ELASTICSEARCH_HOSTS="https://es01:9200"
+      - ELASTICSEARCH_URL="https://es01:9200"
+      - ELASTICSEARCH_HOSTS=["https://es01:9200","https://es02:9200"]
       - ELASTICSEARCH_USERNAME=kibana_system
       - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
       - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
@@ -171,50 +170,38 @@ services:
       timeout: 10s
       retries: 120
 
-
   logstash:
-    image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
-    container_name: logstash
-    ports:
-      - 5046:5046
-    volumes:
-      - ./configs/logstash.conf:/etc/logstash/conf.d/logstash.conf
-      - ./configs/logstash.yml:/opt/logstash/config/logstash.yml
-#    networks:
-#      - elastic
     depends_on:
-      - es01
-      - es02
-
-  filebeat:
-    image: docker.elastic.co/beats/filebeat:${STACK_VERSION}
-    container_name: filebeat
-    privileged: true
-    user: root
+      kibana:
+        condition: service_healthy
+    image: "docker.elastic.co/logstash/logstash-oss:${STACK_VERSION}"
+    container_name: "es-logstash"
     volumes:
-      - ./configs/filebeat.yml:/usr/share/filebeat/filebeat.yml
-      - /var/lib/docker:/var/lib/docker
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./certs:/usr/share/certs
+    expose:
+      - 5044
+    user: root
+    command: >
+      bash -c '
+        if [ ! -d /usr/share/logstash/config/certs/ca ]; then
+          mkdir -p /usr/share/logstash/config/certs
+          cp -r /usr/share/certs/ca/ /usr/share/logstash/config/certs
+          chown -R logstash:root /usr/share/logstash/config/certs
+          echo "Certs is OK"
+        fi
+        env2yaml /usr/share/logstash/config/logstash.yml
+        export LS_JAVA_OPTS="-Dls.cgroup.cpuacct.path.override=/ -Dls.cgroup.cpu.path.override=/ $$LS_JAVA_OPTS"
+        su logstash /usr/share/logstash/bin/logstash
+      '
+  filebeat:
     depends_on:
       - logstash
-
-  some_application:
-    image: library/python:3.9-alpine
-    container_name: some_app
+    image: "docker.elastic.co/beats/filebeat:${STACK_VERSION}"
+    container_name: "es-filebeat"
+    user: root
     volumes:
-      - ./pinger/run.py:/opt/run.py
-    entrypoint: python3 /opt/run.py
+      - ./config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ~/.local/share/docker:/var/lib/docker:ro
+      - /var/run/user/1000/docker.sock:/var/run/docker.sock
 
-
-
-volumes:
-  certs:
-    driver: local
-  esdata01:
-    driver: local
-  esdata02:
-    driver: local
-  esdata03:
-    driver: local
-  kibanadata:
-    driver: local

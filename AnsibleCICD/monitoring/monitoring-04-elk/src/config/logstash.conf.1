@@ -1,0 +1,41 @@
+# input {
+#   tcp {
+#     port => 5046
+#     codec => json
+#   }
+# }
+#
+# filter {
+#   json {}
+# }
+#
+# output {
+#   elasticsearch {
+#     hosts => ["https://es01:9200"]
+#     index => "logstash-%{[@metadata][indexDate]}"
+#     user => elastic
+#     password => mYstr0ngpAsswd
+#
+#   }
+#   stdout { codec => rubydebug }
+# }
+
+input {
+  beats {
+    port => 5044
+    client_inactivity_timeout => 36000
+  }
+}
+
+output {
+  elasticsearch {
+    hosts => [ "http://es-hot:9200" ]
+    user => "elastic"
+    password => "mYstr0ngpAsswd"
+    # ssl_certificate_verification => false
+    #cacert => '/usr/share/logstash/config/certs/ca/ca.crt'
+    # index for Beats input plugin
+    index => "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM.dd}"
+    #ilm_enabled => true
+  }
+}
