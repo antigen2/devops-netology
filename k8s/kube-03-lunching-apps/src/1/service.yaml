@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-svc
+  namespace: default
+spec:
+  ports:
+    - name: nginx-http
+      port: 80
+    - name: nginx-https
+      port: 443
+    - name: multitool-http
+      port: 1180
+    - name: multitool-https
+      port: 11443
+  selector:
+    app: main

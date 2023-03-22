@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - image: nginx:1.19.1
+          ports:
+            - containerPort: 80
+              name: web
+              protocol: TCP
+          name: nginx
+          imagePullPolicy: IfNotPresent
+      initContainers:
+        - name: delay
+          image: busybox
+          command: ['sh', '-c', 'until nslookup nginx-service.default.svc.cluster.local; do echo Waiting for nginx-service! Sleep 3s!; sleep 3; done;']

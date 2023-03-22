@@ -2,6 +2,5 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/AnsibleCICD/Ansible/ansible-04-role/src/ansible/playbook" vcs="Git" />
   </component>
 </project>
