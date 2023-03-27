@@ -5,6 +5,7 @@ metadata:
   name: my-external-svc
   namespace: default
 spec:
+  type: NodePort
   ports:
     - name: nginx-http
       port: 9001
@@ -13,4 +14,3 @@ spec:
       nodePort: 30080
   selector:
     app: main
-  type: NodePort
