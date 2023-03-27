@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: main
+  name: main
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: main
+  template:
+    metadata:
+      labels:
+        app: main
+    spec:
+      containers:
+        - image: nginx:1.19.1
+          ports:
+            - containerPort: 80
+              name: web
+              protocol: TCP
+          name: nginx
+          imagePullPolicy: IfNotPresent
+        - image: wbitt/network-multitool
+          name: multitool
+          env:
+            - name: HTTP_PORT
+              value: '8080'
+          imagePullPolicy: IfNotPresent
