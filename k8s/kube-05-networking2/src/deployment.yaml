@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: main
+  name: frontend
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: main
+  template:
+    metadata:
+      labels:
+        app: main
+    spec:
+      containers:
+        - image: nginx:1.23
+          ports:
+            - containerPort: 80
+              name: web
+              protocol: TCP
+          name: nginx
+          imagePullPolicy: IfNotPresent
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: main
+  name: backend
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: main
+  template:
+    metadata:
+      labels:
+        app: main
+    spec:
+      containers:
+        - image: wbitt/network-multitool
+          name: multitool
+          env:
+            - name: HTTP_PORT
+              value: '8080'
+            - name: HTTPS_PORT
+              value: '8443'
+          imagePullPolicy: IfNotPresent
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-svc
+  namespace: default
+spec:
+  ports:
+    - name: nginx-http
+      port: 80
+    - name: nginx-https
+      port: 443
+    - name: multitool-http
+      port: 8080
+    - name: multitool-https
+      port: 8443
+  selector:
+    app: main
