@@ -101,7 +101,7 @@ spec:
 ```
 Запускаем сервис и деплоймент, смотрим результат:
 ```bash
-antigen@deb11notepad:~/netology/04$ kubectl apply -f deployment.yaml
+antigen@deb11notepad:~/netology/04$ kubectl apply -f deployment.yml
 deployment.apps/main created
 antigen@deb11notepad:~/netology/04$ kubectl apply -f service.yaml
 service/my-svc created

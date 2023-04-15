@@ -109,7 +109,7 @@ spec:
 ```
 Приминение манифеста и просмотр результата:
 ```bash
-antigen@deb11notepad:~/netology/05$ kubectl apply -f deployment.yaml
+antigen@deb11notepad:~/netology/05$ kubectl apply -f deployment.yml
 deployment.apps/frontend created
 deployment.apps/backend created
 service/my-svc created

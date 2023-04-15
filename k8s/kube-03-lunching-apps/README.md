@@ -69,7 +69,7 @@ spec:
 ```
 Запускаем деплой:
 ```bash
-antigen@deb11notepad:~/netology/03$ kubectl create -f deployment.yaml
+antigen@deb11notepad:~/netology/03$ kubectl create -f deployment.yml
 deployment.apps/main created
 antigen@deb11notepad:~/netology/03$ kubectl get pods
 NAME                   READY   STATUS              RESTARTS   AGE
@@ -246,7 +246,7 @@ spec:
 ```
 Создаем наш деплоймент, проверяем созданный под:
 ```bash
-antigen@deb11notepad:~/netology/03$ kubectl create -f deployment.yaml
+antigen@deb11notepad:~/netology/03$ kubectl create -f deployment.yml
 deployment.apps/nginx created
 antigen@deb11notepad:~/netology/03$ kubectl get deployments,svc,pods -o wide
 NAME                    READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES         SELECTOR

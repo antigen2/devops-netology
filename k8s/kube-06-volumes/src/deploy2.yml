@@ -1,0 +1,28 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: main
+  name: mydeploy
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: main
+  template:
+    metadata:
+      labels:
+        app: main
+    spec:
+      containers:
+        - image: wbitt/network-multitool
+          name: multitool
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name:  varlog
+              mountPath: /varlog
+      volumes:
+        - name: varlog
+          hostPath:
+            path: /var/log
