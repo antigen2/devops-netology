@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: main
+  name: mydeploy
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: main
+  template:
+    metadata:
+      labels:
+        app: main
+    spec:
+      containers:
+
+        - image: wbitt/network-multitool
+          name: multitool
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: share
+              mountPath: /input
+
+        - image: busybox
+          name: busybox
+          imagePullPolicy: IfNotPresent
+          command: ['sh', '-c', 'while true; do echo Date: `date` > /output/check.me; sleep 5s; done']
+          volumeMounts:
+            - name: share
+              mountPath: /output
+
+      volumes:
+        - name: share
+          persistentVolumeClaim:
+            claimName: myfirstpvc
