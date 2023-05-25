@@ -1,0 +1,65 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: main
+  name: main
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: main
+  template:
+    metadata:
+      labels:
+        app: main
+    spec:
+      containers:
+        - image: nginx:1.23
+          name: nginx
+          ports:
+            - containerPort: 80
+              name: web
+              protocol: TCP
+            - containerPort: 443
+              name: tls
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: config
+              mountPath: /etc/nginx/conf.d/
+            - name: html
+              mountPath: /usr/share/nginx/html
+            - name: ssl
+              mountPath: /etc/ssl
+      volumes:
+        - name: config
+          configMap:
+            name: my-configmap-nginx-conf
+        - name: html
+          configMap:
+            name: my-configmap-nginx-html
+        - name: ssl
+          secret:
+            secretName: my-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-svc
+  namespace: default
+spec:
+  type: NodePort
+  ports:
+    - port: 9001
+      targetPort: 80
+      nodePort: 30080
+      name: web1
+    - port: 9002
+      targetPort: 433
+      nodePort: 30443
+      name: tls2
+  selector:
+    app: main

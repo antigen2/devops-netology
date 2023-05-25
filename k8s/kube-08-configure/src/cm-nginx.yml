@@ -1,0 +1,99 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-configmap-nginx-html
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Hello, World</title>
+      </head>
+      <body>
+        "Hello, Netology!"
+      </body>
+    </html>
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-configmap-nginx-conf
+data:
+  default.conf: |
+    server {
+      listen 80;
+      server_name _;
+      location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+      }
+    }
+    server {
+      server_name _;
+      listen 443 ssl;
+      ssl_certificate /etc/ssl/nginx.crt;
+      ssl_certificate_key /etc/ssl/nginx.key;
+      location / {
+        root /usr/share/nginx/html;
+        index index.html;
+      }
+    }
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-secret
+StringData:
+  nginx.key: |
+    -----BEGIN PRIVATE KEY-----
+    MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDFPQiDredhEOJC
+    bmUWrqtuNSG4yn1TIvI2g+dRzePD3qZh5w3RP6GzCBS/xs/FdX3g5w/YKiYmgoJA
+    EIcL247YIVv6w9oOgnMjkYBJ8OoG9MOrg64i1iGK7TylVfSLwHXyMcYdEu/+SsNI
+    DSaU2uhjn6mqAkgwo+6TFnr4YgQjfYCLxAjfliEP7rhIRZIGmsd3SLPF+spJm9jL
+    PlM0S9qmkIRfN8Hcb6/7YHLjivTGGqKdlCMNgjmR63AFn/NabPEbs878kWYNR1XN
+    ElBAOb8YjxVXtvE4SGkqCDyt95i9L4lVLwVJekrWU58I/H95HJCylZKX20o+Pxx3
+    +trNGenVAgMBAAECggEBAIwepdPWUY/1jKehAZOxlvv+Juy+fXX4V5Y+8rB80hgu
+    LolSudAzok4rqYHsXWJr63dA71Kj7uJgyON2WlokKkCEwnFNfbXdGqrkDP16dudm
+    LzPDoowBD2dAzlquy8IUgjYDAjlZYMGIn16qaQRK19kebkvmvx4+95fq2oVmLIaA
+    uzQfIJsxTyS/DBpnIb/ZIPIHpni4F7VxlDxdW3M6TkIZkXNkZctgPoSO17LeF7pX
+    gntv3EJtK2tlF/tM7wGGwdLiMiCifIvVgYYiPD9PixQK3+HiLkNWqu8SNXLEhoYe
+    Lp2ZzzdQEOTXFgGJRI8m2/2gpbHVw526ozdHO8GNkwECgYEA+XAKRsfeqDqhVpha
+    jDaTGrj7rBGcKHG0orCywz6zoJyvJu7PzuRmHwt59Q6r/RIChqhZ75l9MSH26hDk
+    s0rxZG23jgpEbAp9VsRUasFIAUb+2xX/EKmK3947bDpIjGV+O9xMNKwD8Rr4mApu
+    vtbI42D4vzfk71sDUWuLHTaT6TUCgYEAym1uiNF9dfZyP/7LAm5fGMs66kvlC+8w
+    FFfVeXTJpnTFwQA/hHjP/HvUhV24H27y8hkWOGlKKUKn0oazeUDnk7VuJPn5JpSC
+    rxlCukIOC7OvSJqKfdnP4LwmhnVd0ScopkCiQf/VsZUKwVuSFbRxMqIYrZNMqaxV
+    wIC9GVqasiECgYBlZqim0YWwefUwkMruiRkQGfclohsLTf4SzSY+vPSk7E0/1IFi
+    J/Nj13SCrK46OOIR/8pf3tPH73jC+o8eW+751qhx87aQ/UqqxTFUHLK64jOkuLJy
+    AZpVG7CodKEdgfzpNMs99le74i0BEeynZAVSeg9lHMHSk/srVD6/Z3qFqQKBgFFa
+    x7i/EQAuyt4DZc2VVCzfyM7PL7+rIpSadFY65Kw8dBnMIrr33wcnMVNkRhKEAanh
+    ATgswLxyaIZI0qqhtjB8E0dTG5owx5Ddwx6eW4zCa2jvi0dnGY/FrmoNk2Xyqfif
+    M1b5HgYf01HAnqaQfYoO8YIZGA99Dn2uf9FHw7JhAoGBALS+3ffepFopJQjRkzQm
+    KLoer+03ojb8MdqRd3yFSSAeN+EnCsYYaW/aI5E62TkwSznukusV/XW4EVpsHYqx
+    FWEdCk5zT2J1qRZmH9NuADPG3IOake5nzzEgmkd9+kxbztn4iUdhpAr9ONs3hW9+
+    6ONM1dLvFChHLo6o33yRUCsZ
+    -----END PRIVATE KEY-----
+  nginx.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIDazCCAlOgAwIBAgIULI61bS02Sa2i2/9FZQj3o+N3MT4wDQYJKoZIhvcNAQEL
+    BQAwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoM
+    GEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZDAeFw0yMzA1MjUxNzIxMDlaFw0yNDA1
+    MjQxNzIxMDlaMEUxCzAJBgNVBAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEw
+    HwYDVQQKDBhJbnRlcm5ldCBXaWRnaXRzIFB0eSBMdGQwggEiMA0GCSqGSIb3DQEB
+    AQUAA4IBDwAwggEKAoIBAQDFPQiDredhEOJCbmUWrqtuNSG4yn1TIvI2g+dRzePD
+    3qZh5w3RP6GzCBS/xs/FdX3g5w/YKiYmgoJAEIcL247YIVv6w9oOgnMjkYBJ8OoG
+    9MOrg64i1iGK7TylVfSLwHXyMcYdEu/+SsNIDSaU2uhjn6mqAkgwo+6TFnr4YgQj
+    fYCLxAjfliEP7rhIRZIGmsd3SLPF+spJm9jLPlM0S9qmkIRfN8Hcb6/7YHLjivTG
+    GqKdlCMNgjmR63AFn/NabPEbs878kWYNR1XNElBAOb8YjxVXtvE4SGkqCDyt95i9
+    L4lVLwVJekrWU58I/H95HJCylZKX20o+Pxx3+trNGenVAgMBAAGjUzBRMB0GA1Ud
+    DgQWBBT2a8sMcBTfItXnT0LJuI/WJnnmoDAfBgNVHSMEGDAWgBT2a8sMcBTfItXn
+    T0LJuI/WJnnmoDAPBgNVHRMBAf8EBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQBn
+    gbUPP5uYrVEGOXBoKBAFTrd9xspi3NFbSPjNNJRlBoYnJUMOglXM62MNr8CdxOS3
+    yZUdODFfI8BKgXMEakJUCAkKSNfNfK+ucIgT2xtzwPWVngrTh9sAfOngXKySo0kE
+    oEX09Ip6J5BL8DNzTCZTfC5hoxTjie7VzHidBiyPOMGiYNMBYpvlA4blHxVHkGc1
+    gzD2SW775TK/zMiHnzvkY+oRmdSWAnjTCzC7xUQtEdGgh/QcEd9w4hsY2bpjbpBb
+    GHaKKQdqApSYxo+XxK2Ahfv441ZGzcSLpF+vKykBDBSNRS78g05yg0INC/bGXWUG
+    YVi/xlNe331J1xj67mcj
+    -----END CERTIFICATE-----
