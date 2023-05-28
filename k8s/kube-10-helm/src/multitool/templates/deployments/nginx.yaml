@@ -1,0 +1,23 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.apps.nginx.name }}
+  labels:
+    app: {{ .Values.apps.nginx.name }}
+spec:
+  replicas: {{ .Values.apps.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.apps.nginx.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.apps.nginx.name }}
+    spec:
+      containers:
+        - name: {{ .Values.apps.nginx.name }}
+          image: {{ .Values.apps.nginx.image.repository }}:{{ .Values.apps.nginx.image.tag }}
+          imagePullPolicy: {{ .Values.apps.nginx.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.apps.nginx.containerPort }}

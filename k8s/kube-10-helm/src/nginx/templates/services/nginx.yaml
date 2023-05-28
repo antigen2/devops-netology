@@ -1,0 +1,17 @@
+{{- $vers := .Chart.AppVersion | toString }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.apps.nginx.name }}-{{ .Values.service.name }}-{{ regexReplaceAll "\\W+" $vers "-" }}
+  labels:
+    app: {{ .Release.Name }}-{{ .Values.service.name }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.apps.nginx.containerPort }}
+      protocol: TCP
+      name: {{ .Values.apps.nginx.name }}
+  selector:
+    app: {{ .Values.apps.nginx.name }}

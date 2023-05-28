@@ -1,0 +1,26 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.apps.multitool.name }}
+  labels:
+    app: {{ .Values.apps.multitool.name }}
+spec:
+  replicas: {{ .Values.apps.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.apps.multitool.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.apps.multitool.name }}
+    spec:
+      containers:
+        - name: {{ .Values.apps.multitool.name }}
+          image: {{ .Values.apps.multitool.image.repository }}:{{ .Values.apps.multitool.image.tag }}
+          imagePullPolicy: {{ .Values.apps.multitool.image.pullPolicy }}
+          env:
+            - name: HTTP_PORT
+              value: {{ .Values.apps.multitool.image.env.HTTP_PORT | quote }}
+            - name: HTTPS_PORT
+              value: {{ .Values.apps.multitool.image.env.HTTPS_PORT | quote  }}

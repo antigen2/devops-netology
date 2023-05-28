@@ -270,7 +270,7 @@ service/nginx-service   ClusterIP   10.152.183.19   <none>        80/TCP    2s  
 
 NAME                         READY   STATUS            RESTARTS   AGE   IP            NODE           NOMINATED NODE   READINESS GATES
 pod/nginx-7fff5475ff-xsv9q   0/1     PodInitializing   0          23s   10.1.86.247   deb11notepad   <none>           <none>
-antigen@deb11notepad:~/netology/03$ kubectl apply -f nginx-svc.yaml
+antigen@deb11notepad:~/netology/03$ kubectl apply -f nginx-nginx.yaml
 service/nginx-service created
 antigen@deb11notepad:~/netology/03$ kubectl get deployments,svc,pods -o wide
 NAME                    READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES         SELECTOR

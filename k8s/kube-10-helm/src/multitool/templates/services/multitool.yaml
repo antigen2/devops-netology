@@ -1,0 +1,17 @@
+{{- $vers := .Chart.AppVersion | toString }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.apps.multitool.name }}-{{ .Values.service.name }}-{{ regexReplaceAll "\\W+" $vers "-" }}
+  labels:
+    app: {{ .Release.Name }}-{{ .Values.service.name }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.apps.multitool.image.env.HTTP_PORT }}
+      protocol: TCP
+      name: {{ .Values.apps.multitool.name }}
+  selector:
+    app: {{ .Values.apps.multitool.name }}
