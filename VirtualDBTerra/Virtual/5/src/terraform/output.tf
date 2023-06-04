@@ -1,4 +1,4 @@
-output "internal_ip_address_node01" {
+hjffgfhggjhgoutput "internal_ip_address_node01" {
   value = "${yandex_compute_instance.node01.network_interface.0.ip_address}"
 }
 

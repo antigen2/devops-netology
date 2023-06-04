@@ -1,0 +1,21 @@
+---
+master:
+  hosts:
+    master-01:
+      ansible_host: 51.250.42.158
+      ansible_user: ubuntu
+
+worker:
+  hosts:
+    worker-01:
+      ansible_host: 51.250.43.139
+      ansible_user: ubuntu
+    worker-02:
+      ansible_host: 51.250.35.160
+      ansible_user: ubuntu
+    worker-03:
+      ansible_host: 51.250.39.74
+      ansible_user: ubuntu
+    worker-04:
+      ansible_host: 51.250.47.234
+      ansible_user: ubuntu
