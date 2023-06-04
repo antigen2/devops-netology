@@ -2,20 +2,20 @@
 master:
   hosts:
     master-01:
-      ansible_host: 51.250.42.158
+      ansible_host: 84.201.146.158
       ansible_user: ubuntu
 
 worker:
   hosts:
     worker-01:
-      ansible_host: 51.250.43.139
+      ansible_host: 84.201.150.244
       ansible_user: ubuntu
     worker-02:
-      ansible_host: 51.250.35.160
+      ansible_host: 51.250.32.133
       ansible_user: ubuntu
     worker-03:
-      ansible_host: 51.250.39.74
+      ansible_host: 84.201.151.174
       ansible_user: ubuntu
     worker-04:
-      ansible_host: 51.250.47.234
+      ansible_host: 84.201.149.94
       ansible_user: ubuntu

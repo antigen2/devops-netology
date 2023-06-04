@@ -56,10 +56,10 @@ Outputs:
 
 master_instance_ips = {
   "external_ip_address" = [
-    "51.250.42.158",
+    "84.201.146.158",
   ]
   "internal_ip_address" = [
-    "192.168.100.6",
+    "192.168.100.32",
   ]
   "name" = [
     "master-0",
@@ -67,16 +67,16 @@ master_instance_ips = {
 }
 worker_instance_ips = {
   "external_ip_address" = [
-    "51.250.43.139",
-    "51.250.35.160",
-    "51.250.39.74",
-    "51.250.47.234",
+    "84.201.150.244",
+    "51.250.32.133",
+    "84.201.151.174",
+    "84.201.149.94",
   ]
   "internal_ip_address" = [
+    "192.168.100.12",
+    "192.168.100.21",
+    "192.168.100.7",
     "192.168.100.19",
-    "192.168.100.24",
-    "192.168.100.22",
-    "192.168.100.17",
   ]
   "name" = [
     "worker-0",
@@ -92,22 +92,22 @@ worker_instance_ips = {
 master:
   hosts:
     master-01:
-      ansible_host: 51.250.42.158
+      ansible_host: 84.201.146.158
       ansible_user: ubuntu
 
 worker:
   hosts:
     worker-01:
-      ansible_host: 51.250.43.139
+      ansible_host: 84.201.150.244
       ansible_user: ubuntu
     worker-02:
-      ansible_host: 51.250.35.160
+      ansible_host: 51.250.32.133
       ansible_user: ubuntu
     worker-03:
-      ansible_host: 51.250.39.74
+      ansible_host: 84.201.151.174
       ansible_user: ubuntu
     worker-04:
-      ansible_host: 51.250.47.234
+      ansible_host: 84.201.149.94
       ansible_user: ubuntu
 ```
 Далее запускаем `ansible playbook`:
@@ -138,19 +138,27 @@ ok: [master-01]
 PLAY [worker] ************************************************************************************************************************************************************************
 
 TASK [Gathering Facts] ***************************************************************************************************************************************************************
-ok: [worker-02]
-ok: [worker-03]
-ok: [worker-01]
 ok: [worker-04]
+ok: [worker-02]
+ok: [worker-01]
+ok: [worker-03]
 
 TASK [Join Cluster] ******************************************************************************************************************************************************************
-changed: [worker-01]
-changed: [worker-03]
 changed: [worker-02]
+changed: [worker-01]
 changed: [worker-04]
+changed: [worker-03]
+
+PLAY [master] ************************************************************************************************************************************************************************
+
+TASK [Gathering Facts] ***************************************************************************************************************************************************************
+ok: [master-01]
+
+TASK [Install Flannel Plugin] ********************************************************************************************************************************************************
+changed: [master-01]
 
 PLAY RECAP ***************************************************************************************************************************************************************************
-master-01                  : ok=6    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+master-01                  : ok=8    changed=5    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 worker-01                  : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 worker-02                  : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 worker-03                  : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
@@ -158,7 +166,7 @@ worker-04                  : ok=2    changed=1    unreachable=0    failed=0    s
 ```
 После раскатки плэйбука заходим на мастер и смотрим что получилось:
 ```bash
-antigen@deb11notepad:~/netology/12/ansible$ ssh ubuntu@51.250.42.158
+antigen@deb11notepad:~/netology/12/ansible$ ssh ubuntu@84.201.146.158
 Welcome to Ubuntu 20.04.6 LTS (GNU/Linux 5.4.0-149-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com
@@ -167,12 +175,12 @@ Welcome to Ubuntu 20.04.6 LTS (GNU/Linux 5.4.0-149-generic x86_64)
 New release '22.04.2 LTS' available.
 Run 'do-release-upgrade' to upgrade to it.
 
-Last login: Sun Jun  4 11:50:09 2023 from xx.yy.zz.ii
-ubuntu@ef3jvmga4fov8rlbm2av:~$ kubectl get nodes
-NAME                   STATUS     ROLES           AGE     VERSION
-ef320av1v1gi6f6gfo48   NotReady   <none>          4m48s   v1.27.2
-ef3dnukdg6brpvf91eh5   NotReady   <none>          4m45s   v1.27.2
-ef3jvmga4fov8rlbm2av   NotReady   control-plane   5m10s   v1.27.2
-ef3leq5cg1bh9miog3ad   NotReady   <none>          4m48s   v1.27.2
-ef3sadvins7h9lujni9s   NotReady   <none>          4m48s   v1.27.2
+Last login: Sun Jun  4 17:37:57 2023 from 88.87.84.72
+ubuntu@ef3nlhfp19ikqu7e6n9j:~$ kubectl get nodes
+NAME                   STATUS   ROLES           AGE    VERSION
+ef31162hn87vplob79aq   Ready    <none>          100s   v1.27.2
+ef39ei0dtmc6tc9b348r   Ready    <none>          100s   v1.27.2
+ef3al98af41hjh8gb9j5   Ready    <none>          100s   v1.27.2
+ef3nlhfp19ikqu7e6n9j   Ready    control-plane   2m2s   v1.27.2
+ef3rp8jvkk1lkvi05eht   Ready    <none>          100s   v1.27.2
 ```
