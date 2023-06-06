@@ -3,7 +3,7 @@
   become: true
   tasks:
     - name: Init Cluaster
-      ansible.builtin.shell: kubeadm init --pod-network-cidr=10.244.0.0/16
+      ansible.builtin.shell: kubeadm init --pod-network-cidr=192.168.0.0/16
 
     - name: mkdir .kube
       become: yes
@@ -35,22 +35,30 @@
       ansible.builtin.shell: "{{ hostvars['master-01'].join_command }}"
 
 - hosts: master
+  vars:
+    files:
+        - deploys.yml
+        - services.yml
+        - network-policy.yml
   tasks:
-    - name: Install Flannel Plugin
-      ansible.builtin.shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+    - name: Kubectl Autocomplete
+      ansible.builtin.shell: echo "source <(kubectl completion bash)" >> ~/.bashrc
 
-    - name: Make Dir /run/flannel
-      become: true
-      ansible.builtin.file:
-        path: /run/flannel
-        state: directory
+    - name: Install Calico
+      ansible.builtin.shell: kubectl create -f https://docs.projectcalico.org/v3.23/manifests/calico.yaml
 
-    - name: Make /run/flannel/subnet.env
-      become: true
+    - name: Pause 30s. Wait for cluster startup
+      ansible.builtin.pause:
+        seconds: 30
+
+    - name: Copy Deploy file
       ansible.builtin.copy:
-        dest: "/run/flannel/subnet.env"
-        content: |
-          FLANNEL_NETWORK=10.244.0.0/16
-          FLANNEL_SUBNET=10.244.0.1/24
-          FLANNEL_MTU=1450
-          FLANNEL_IPMASQ=true
+        src: "./files/{{ item }}"
+        dest: "{{ item }}"
+      loop: "{{ files }}"
+
+    - name: Create Namespace app
+      ansible.builtin.shell: kubectl create ns app
+
+    - name: Apply yaml
+      ansible.builtin.shell: kubectl apply -f .
