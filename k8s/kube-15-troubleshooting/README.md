@@ -200,3 +200,58 @@ antigen@deb11notepad:~/netology/15$ kubectl -n data logs deployments/auth-db
 10.1.86.245 - - [07/Jun/2023:16:28:58 +0000] "GET / HTTP/1.1" 200 612 "-" "curl/7.35.0" "-"
 10.1.86.194 - - [07/Jun/2023:16:28:58 +0000] "GET / HTTP/1.1" 200 612 "-" "curl/7.35.0" "-"
 ```
+и тут
+```bash
+antigen@deb11notepad:~/netology/15$ kubectl -n web logs deployments/web-consumer --tail 50
+Found 2 pods, using pod/web-consumer-577d47b97d-bn6fp
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+100   612  100   612    0     0   116k      0 --:--:-- --:--:-- --:--:--  597k
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+100   612  100   612    0     0   163k      0 --:--:-- --:--:-- --:--:--  597k
+```
